@@ -5,7 +5,7 @@ class MyButton extends StatelessWidget {
   final Color color;
   final double width;
   final Widget child;
-  MyButton({
+  const MyButton({
     required this.child,
     required this.width,
     required this.onPressed,
