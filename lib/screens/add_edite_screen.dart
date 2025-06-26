@@ -7,6 +7,7 @@ import '../widget/MyTextField.dart';
 class AddEditeScreen extends StatefulWidget {
   static TextEditingController nameController = TextEditingController();
   static TextEditingController phoneController = TextEditingController();
+  static int id = 0;
 
   const AddEditeScreen({super.key});
 
@@ -25,9 +26,9 @@ class _AddEditeScreenState extends State<AddEditeScreen> {
           elevation: 0,
           backgroundColor: Colors.redAccent,
           centerTitle: true,
-          title: const Text(
-            'مخاطب جدید',
-            style: TextStyle(
+          title: Text(
+            AddEditeScreen.id == 0 ? 'افزودن مخاطب' : 'ویرایش مخاطب',
+            style: const TextStyle(
               fontFamily: 'iran',
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -56,16 +57,24 @@ class _AddEditeScreenState extends State<AddEditeScreen> {
               MyButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    Network.postData(
-                      fullname: AddEditeScreen.nameController.text,
-                      phone: AddEditeScreen.phoneController.text,
-                    );
+                    if (AddEditeScreen.id == 0) {
+                      Network.postData(
+                        phone: AddEditeScreen.phoneController.text,
+                        fullname: AddEditeScreen.nameController.text,
+                      );
+                    } else {
+                      Network.putData(
+                        phone: AddEditeScreen.phoneController.text,
+                        fullname: AddEditeScreen.nameController.text,
+                        id: AddEditeScreen.id.toString(),
+                      );
+                    }
                     Navigator.pop(context);
                   }
                 },
                 width: double.infinity,
-                child: const Text(
-                  'اضافه کردن',
+                child: Text(
+                  AddEditeScreen.id == 0 ? 'افزودن' : 'ویرایش',
                   style: TextStyle(
                     fontFamily: 'iran',
                     fontWeight: FontWeight.bold,

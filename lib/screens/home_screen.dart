@@ -14,9 +14,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     Network.getData().then((value) async {
-      await Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 4));
       setState(() {});
     });
+    setState(() {});
     super.initState();
   }
 
@@ -27,10 +28,19 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.redAccent,
         elevation: 0,
         onPressed: () {
+          AddEditeScreen.phoneController.clear();
+          AddEditeScreen.nameController.clear();
+          AddEditeScreen.id = 0;
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddEditeScreen()),
-          );
+          ).then((value) {
+            Network.getData().then((value) async {
+              await Future.delayed(const Duration(seconds: 3));
+              setState(() {});
+            });
+            setState(() {});
+          });
         },
         child: const Icon(Icons.add),
       ),
@@ -45,7 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Network.getData().then((value) async {
+                await Future.delayed(const Duration(seconds: 3));
+                setState(() {});
+              });
+              setState(() {});
+            },
             icon: Icon(Icons.refresh_sharp, color: Colors.white, size: 30),
           ),
         ],
@@ -65,6 +81,11 @@ class _HomeScreenState extends State<HomeScreen> {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListTile(
+              onLongPress: () async {
+                Network.deleteContact(Network.contacts[index].id.toString());
+                await Future.delayed(const Duration(seconds: 3));
+                setState(() {});
+              },
               leading: CircleAvatar(
                 radius: 25,
 
@@ -76,7 +97,25 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               trailing: IconButton(
                 icon: Icon(Icons.edit, color: Colors.redAccent, size: 30),
-                onPressed: () {},
+                onPressed: () {
+                  AddEditeScreen.phoneController.text =
+                      Network.contacts[index].phone;
+                  AddEditeScreen.nameController.text =
+                      Network.contacts[index].fullname;
+                  AddEditeScreen.id = int.parse(Network.contacts[index].id!);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddEditeScreen(),
+                    ),
+                  ).then((value) {
+                    Network.getData().then((value) async {
+                      await Future.delayed(const Duration(seconds: 3));
+                      setState(() {});
+                    });
+                    setState(() {});
+                  });
+                },
               ),
               title: Text(
                 Network.contacts[index].fullname,

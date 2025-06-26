@@ -49,7 +49,7 @@ class Network {
   }
 
   static Future<void> deleteContact(String id) async {
-    await http.delete(urlWithId('2')).then((value) {
+    await http.delete(urlWithId(id)).then((value) {
       getData();
     });
   }

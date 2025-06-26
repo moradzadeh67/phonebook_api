@@ -3,10 +3,12 @@ class Contact {
 
   late final String phone;
   late final String fullname;
+  String? id;
 
   Contact.fromJson(Map<String, dynamic> json) {
     phone = json['phone'];
     fullname = json['fullname'];
+    id = json['id'].toString();
   }
 
   Map<String, dynamic> toJson() {
