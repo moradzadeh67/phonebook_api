@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../utils/network.dart';
 import 'add_edite_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,6 +11,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    Network.getData().then((value) async {
+      await Future.delayed(const Duration(seconds: 3));
+      setState(() {});
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: ListView.builder(
-        itemCount: 10,
+        itemCount: Network.contacts.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -60,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 backgroundColor: Colors.redAccent,
                 child: Text(
-                  '${index + 1}',
+                  (index + 1).toString(),
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
@@ -68,9 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icon(Icons.edit, color: Colors.redAccent, size: 30),
                 onPressed: () {},
               ),
-              title: Text('Salman', style: TextStyle(fontFamily: 'iran')),
+              title: Text(
+                Network.contacts[index].fullname,
+                style: TextStyle(fontFamily: 'iran'),
+              ),
               subtitle: Text(
-                '09123456789',
+                Network.contacts[index].phone,
                 style: TextStyle(fontFamily: 'iran'),
               ),
             ),

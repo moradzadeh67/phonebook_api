@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phonebook_api/widget/MyButton.dart';
 
+import '../utils/network.dart';
 import '../widget/MyTextField.dart';
 
 class AddEditeScreen extends StatefulWidget {
@@ -54,7 +55,13 @@ class _AddEditeScreenState extends State<AddEditeScreen> {
               SizedBox(height: 40),
               MyButton(
                 onPressed: () {
-                  if (formKey.currentState!.validate()) {}
+                  if (formKey.currentState!.validate()) {
+                    Network.postData(
+                      fullname: AddEditeScreen.nameController.text,
+                      phone: AddEditeScreen.phoneController.text,
+                    );
+                    Navigator.pop(context);
+                  }
                 },
                 width: double.infinity,
                 child: const Text(
