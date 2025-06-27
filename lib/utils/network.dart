@@ -1,9 +1,24 @@
 import 'dart:convert' as convert;
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:phonebook_api/models/contact.dart';
 
 class Network {
+  static bool isConnected = false;
+  static Future<bool> checkInternet() async {
+    Connectivity().onConnectivityChanged.listen((status) {
+      if (status == ConnectivityResult.wifi ||
+          status == ConnectivityResult.mobile) {
+        isConnected = true;
+      } else {
+        isConnected = false;
+      }
+      print(Network.isConnected);
+    });
+    return isConnected;
+  }
+
   static Uri url = Uri.parse('https://retoolapi.dev/DAa0LF/data');
   static Uri urlWithId(String id) {
     Uri url = Uri.parse(
@@ -17,7 +32,7 @@ class Network {
 
   static Future<void> getData() async {
     contacts.clear();
-    http.get(Network.url).then((response) {
+    await http.get(Network.url).then((response) {
       if (response.statusCode == 200) {
         List jasonDecoded = convert.jsonDecode(response.body);
         for (var json in jasonDecoded) {

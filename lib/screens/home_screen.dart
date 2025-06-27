@@ -14,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     Network.getData().then((value) async {
-      await Future.delayed(const Duration(seconds: 4));
+      await Future.delayed(const Duration(seconds: 5));
       setState(() {});
     });
     setState(() {});
