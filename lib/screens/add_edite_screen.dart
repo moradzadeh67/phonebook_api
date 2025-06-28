@@ -57,19 +57,26 @@ class _AddEditeScreenState extends State<AddEditeScreen> {
               MyButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    if (AddEditeScreen.id == 0) {
-                      Network.postData(
-                        phone: AddEditeScreen.phoneController.text,
-                        fullname: AddEditeScreen.nameController.text,
-                      );
-                    } else {
-                      Network.putData(
-                        phone: AddEditeScreen.phoneController.text,
-                        fullname: AddEditeScreen.nameController.text,
-                        id: AddEditeScreen.id.toString(),
-                      );
-                    }
-                    Navigator.pop(context);
+                    Network.checkInternet();
+                    Future.delayed(const Duration(seconds: 3)).then((value) {
+                      if (Network.isConnected) {
+                        if (AddEditeScreen.id == 0) {
+                          Network.postData(
+                            phone: AddEditeScreen.phoneController.text,
+                            fullname: AddEditeScreen.nameController.text,
+                          );
+                        } else {
+                          Network.putData(
+                            phone: AddEditeScreen.phoneController.text,
+                            fullname: AddEditeScreen.nameController.text,
+                            id: AddEditeScreen.id.toString(),
+                          );
+                        }
+                        Navigator.pop(context);
+                      } else {
+                        Network.showInternetError(context);
+                      }
+                    });
                   }
                 },
                 width: double.infinity,

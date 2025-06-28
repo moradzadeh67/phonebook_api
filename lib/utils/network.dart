@@ -1,22 +1,44 @@
 import 'dart:convert' as convert;
+import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:phonebook_api/models/contact.dart';
 
 class Network {
   static bool isConnected = false;
   static Future<bool> checkInternet() async {
-    Connectivity().onConnectivityChanged.listen((status) {
-      if (status == ConnectivityResult.wifi ||
-          status == ConnectivityResult.mobile) {
-        isConnected = true;
-      } else {
+    try {
+      var connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult == ConnectivityResult.none) {
         isConnected = false;
+      } else {
+        final result = await InternetAddress.lookup('example.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          isConnected = true;
+        } else {
+          isConnected = false;
+        }
       }
-      print(Network.isConnected);
-    });
+    } catch (e) {
+      print('Internet check error: $e');
+      isConnected = false;
+    }
+    print('Network connection status: $isConnected');
     return isConnected;
+  }
+
+  static void showInternetError(BuildContext context) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: 'خطا',
+      desc: 'شما به اینترنت متصل نیستید!',
+      btnOkOnPress: () {},
+    ).show();
   }
 
   static Uri url = Uri.parse('https://retoolapi.dev/DAa0LF/data');

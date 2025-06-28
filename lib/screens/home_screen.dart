@@ -13,12 +13,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    Network.getData().then((value) async {
-      await Future.delayed(const Duration(seconds: 5));
+    super.initState();
+    Network.checkInternet();
+    Future.delayed(const Duration(seconds: 3)).then((value) {
+      if (Network.isConnected) {
+        Network.getData().then((value) async {
+          await Future.delayed(const Duration(seconds: 3));
+          // setState(() {});
+        });
+      }
       setState(() {});
     });
-    setState(() {});
-    super.initState();
+    // setState(() {});
   }
 
   @override
@@ -56,11 +62,19 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Network.getData().then((value) async {
-                await Future.delayed(const Duration(seconds: 3));
-                setState(() {});
+              Network.checkInternet();
+              Future.delayed(const Duration(seconds: 3)).then((value) {
+                if (Network.isConnected) {
+                  Network.getData().then((value) async {
+                    await Future.delayed(const Duration(seconds: 3));
+                    setState(() {});
+                  });
+                  // setState(() {});
+                } else {
+                  Network.showInternetError(context);
+                }
+                // setState(() {});
               });
-              setState(() {});
             },
             icon: Icon(Icons.refresh_sharp, color: Colors.white, size: 30),
           ),
